@@ -1,0 +1,1302 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "学生选课系统",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "用户界面"
+    },
+    {
+      "name": "学生界面"
+    },
+    {
+      "name": "教师界面"
+    }
+  ],
+  "paths": {
+    "/api/user/login": {
+      "post": {
+        "summary": "登录",
+        "x-apifox-folder": "用户界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "用户登录接口，要求区分教师和学生登录\n前端要求能跳转到不同的界面\n后端要求可以返回不同的type码来区分\n",
+        "tags": [
+          "用户界面"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account": {
+                    "type": "string",
+                    "title": "账号",
+                    "description": "要求是学号或者教师工号，只能有数字组成"
+                  },
+                  "password": {
+                    "type": "string",
+                    "title": "密码",
+                    "description": "要求长度大于8位"
+                  }
+                },
+                "x-apifox-orders": [
+                  "account",
+                  "password"
+                ],
+                "required": [
+                  "account",
+                  "password"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "account": "12345678",
+                "password": "12345678"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "integer",
+                          "description": "type为1时代表学生，2代表老师"
+                        },
+                        "user_id": {
+                          "type": "integer"
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "type",
+                        "user_id"
+                      ],
+                      "required": [
+                        "type",
+                        "user_id"
+                      ],
+                      "x-apifox-ignore-properties": []
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "学生登录成功",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": {
+                        "type": 1,
+                        "user_id": 1
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "教师登录成功",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": {
+                        "type": 2,
+                        "user_id": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "x-200:账号不存在": {
+            "description": "账号不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "null"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "账号不存在",
+                    "value": {
+                      "code": 401,
+                      "msg": "账号不存在",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "x-200:密码错误": {
+            "description": "密码错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "密码错误",
+                    "value": {
+                      "code": 402,
+                      "msg": "密码错误",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97460938-run"
+      }
+    },
+    "/api/user/reg": {
+      "post": {
+        "summary": "用户注册",
+        "x-apifox-folder": "用户界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "生成学生和教师账户\n前端不需要实现这个接口\n后端要求实现",
+        "tags": [
+          "用户界面"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account": {
+                    "type": "string",
+                    "description": "要求是学号或者教师工号，只能有数字组成"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "要求长度大于8位"
+                  },
+                  "type": {
+                    "type": "integer",
+                    "description": "1代表学生账号，2代表教师账号"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "姓名"
+                  }
+                },
+                "required": [
+                  "account",
+                  "password",
+                  "type",
+                  "name"
+                ],
+                "x-apifox-orders": [
+                  "account",
+                  "password",
+                  "type",
+                  "name"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "account": "12345678",
+                "password": "12345678",
+                "type": 1,
+                "name": "小明"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97461055-run"
+      }
+    },
+    "/api/student/select-course": {
+      "get": {
+        "summary": "学生获取选上的课程列表",
+        "x-apifox-folder": "学生界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "学生获取已经选上的课程\n前端要求展示除已经选上的课程\n后端要求返回课程列表",
+        "tags": [
+          "学生界面"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "学生编号",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "class_list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "class_name": {
+                                "type": "string",
+                                "title": "课程名称"
+                              },
+                              "date": {
+                                "type": "string",
+                                "title": "选上的时间"
+                              },
+                              "time": {
+                                "type": "integer",
+                                "title": "具体的时间段",
+                                "description": "1代表上午一二节，2代表上午三四节，3代表下午一二节，4代表下午三四节"
+                              },
+                              "weekday": {
+                                "type": "integer",
+                                "title": "星期几",
+                                "description": "1代表星期一，2代表星期二，依次类推"
+                              },
+                              "teacher_name": {
+                                "type": "string",
+                                "title": "教师姓名"
+                              },
+                              "type": {
+                                "type": "integer",
+                                "description": "1代表必修课，2代表选修课，3代表通识课",
+                                "title": "课程类型"
+                              },
+                              "class_id": {
+                                "type": "integer",
+                                "title": "课程编号"
+                              }
+                            },
+                            "required": [
+                              "class_name",
+                              "date",
+                              "time",
+                              "weekday",
+                              "teacher_name",
+                              "type",
+                              "class_id"
+                            ],
+                            "x-apifox-orders": [
+                              "class_name",
+                              "date",
+                              "time",
+                              "weekday",
+                              "teacher_name",
+                              "type",
+                              "class_id"
+                            ],
+                            "x-apifox-ignore-properties": []
+                          }
+                        }
+                      },
+                      "required": [
+                        "class_list"
+                      ],
+                      "x-apifox-orders": [
+                        "class_list"
+                      ],
+                      "x-apifox-ignore-properties": []
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": {
+                        "class_list": [
+                          {
+                            "class_name": "c++",
+                            "date": "1995-01-20",
+                            "time": 1,
+                            "weekday": 4,
+                            "teacher_name": "小明",
+                            "type": 1,
+                            "class_id": 1
+                          },
+                          {
+                            "class_name": "java",
+                            "date": "1982-05-29",
+                            "time": 2,
+                            "weekday": 3,
+                            "teacher_name": "小白",
+                            "type": 1,
+                            "class_id": 2
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97467621-run"
+      }
+    },
+    "/api/teacher/course": {
+      "post": {
+        "summary": "教师创建课程",
+        "x-apifox-folder": "教师界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "前端提供录入\n后端存储",
+        "tags": [
+          "教师界面"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "class_name": {
+                    "type": "string",
+                    "title": "课程名称"
+                  },
+                  "time": {
+                    "type": "integer",
+                    "title": "具体的时间段",
+                    "description": "1代表上午一二节，2代表上午三四节，3代表下午一二节，4代表下午三四节"
+                  },
+                  "weekday": {
+                    "type": "integer",
+                    "title": "星期几",
+                    "description": "1代表星期一，2代表星期二，依次类推"
+                  },
+                  "user_id": {
+                    "type": "integer",
+                    "title": "教师编号"
+                  },
+                  "type": {
+                    "type": "integer",
+                    "title": "课程类型",
+                    "description": "1代表必修课，2代表选修课，3代表通识课"
+                  },
+                  "number": {
+                    "type": "integer",
+                    "title": "允许选的学生数量"
+                  }
+                },
+                "required": [
+                  "class_name",
+                  "time",
+                  "weekday",
+                  "user_id",
+                  "type",
+                  "number"
+                ],
+                "x-apifox-orders": [
+                  "class_name",
+                  "time",
+                  "weekday",
+                  "user_id",
+                  "type",
+                  "number"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "class_name": "c++",
+                "time": 1,
+                "weekday": 1,
+                "user_id": 1,
+                "type": 1,
+                "number": 13
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97471598-run"
+      },
+      "put": {
+        "summary": "教师更新课程信息",
+        "x-apifox-folder": "教师界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "教师界面"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "class_name": {
+                    "type": "string"
+                  },
+                  "time": {
+                    "type": "integer"
+                  },
+                  "weekday": {
+                    "type": "integer"
+                  },
+                  "type": {
+                    "type": "integer"
+                  },
+                  "class_id": {
+                    "type": "integer"
+                  },
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "total": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "class_id",
+                  "user_id"
+                ],
+                "x-apifox-orders": [
+                  "class_name",
+                  "time",
+                  "weekday",
+                  "type",
+                  "class_id",
+                  "user_id",
+                  "total"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "class_id": 1,
+                "user_id": 1,
+                "type": 1,
+                "total": 13,
+                "time": 1,
+                "class_name": "java",
+                "weekday": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97475437-run"
+      },
+      "get": {
+        "summary": "教师获取自己发布的课程",
+        "x-apifox-folder": "教师界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "教师界面"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "class_list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "class_name": {
+                                "type": "string"
+                              },
+                              "time": {
+                                "type": "integer"
+                              },
+                              "weekday": {
+                                "type": "integer"
+                              },
+                              "type": {
+                                "type": "integer"
+                              },
+                              "class_id": {
+                                "type": "integer"
+                              },
+                              "number": {
+                                "type": "integer"
+                              },
+                              "total": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "class_name",
+                              "time",
+                              "weekday",
+                              "type",
+                              "class_id",
+                              "number",
+                              "total"
+                            ],
+                            "x-apifox-orders": [
+                              "class_name",
+                              "time",
+                              "weekday",
+                              "type",
+                              "class_id",
+                              "number",
+                              "total"
+                            ],
+                            "x-apifox-ignore-properties": []
+                          }
+                        }
+                      },
+                      "required": [
+                        "class_list"
+                      ],
+                      "x-apifox-orders": [
+                        "class_list"
+                      ],
+                      "x-apifox-ignore-properties": []
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": {
+                        "class_list": [
+                          {
+                            "class_name": "c++",
+                            "time": 1,
+                            "weekday": 4,
+                            "type": 1,
+                            "class_id": 1,
+                            "number": 4,
+                            "total": 8
+                          },
+                          {
+                            "class_name": "java",
+                            "time": 2,
+                            "weekday": 3,
+                            "type": 1,
+                            "class_id": 2,
+                            "number": 4,
+                            "total": 8
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97475617-run"
+      },
+      "delete": {
+        "summary": "教师删除课程",
+        "x-apifox-folder": "教师界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "教师界面"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "integer"
+                  },
+                  "class_id": {
+                    "type": "integer"
+                  }
+                },
+                "x-apifox-orders": [
+                  "user_id",
+                  "class_id"
+                ],
+                "required": [
+                  "user_id",
+                  "class_id"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "user_id": 1,
+                "class_id": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97475653-run"
+      }
+    },
+    "/api/student/course": {
+      "delete": {
+        "summary": "学生退课",
+        "x-apifox-folder": "学生界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "学生界面"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "class_id": {
+                    "type": "integer",
+                    "title": "课程编号"
+                  },
+                  "user_id": {
+                    "type": "integer",
+                    "title": "用户编号"
+                  }
+                },
+                "x-apifox-orders": [
+                  "class_id",
+                  "user_id"
+                ],
+                "required": [
+                  "class_id",
+                  "user_id"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "class_id": 1,
+                "user_id": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97471998-run"
+      },
+      "post": {
+        "summary": "学生选课",
+        "x-apifox-folder": "学生界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "学生选课接口\n后端思考题：如何处理高并发下的选课接口？",
+        "tags": [
+          "学生界面"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "class_id": {
+                    "type": "integer",
+                    "title": "课程编号"
+                  },
+                  "user_id": {
+                    "type": "integer",
+                    "title": "用户编号"
+                  }
+                },
+                "x-apifox-orders": [
+                  "class_id",
+                  "user_id"
+                ],
+                "required": [
+                  "class_id",
+                  "user_id"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "class_id": 1,
+                "user_id": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": null
+                    }
+                  },
+                  "2": {
+                    "summary": "选择人数已满",
+                    "value": {
+                      "code": 400,
+                      "msg": "人数已满",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97472596-run"
+      }
+    },
+    "/api/student/optional-course": {
+      "get": {
+        "summary": "获取可以选择的课程",
+        "x-apifox-folder": "学生界面",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "学生界面"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "class_list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "class_name": {
+                                "type": "string",
+                                "title": "课程名称"
+                              },
+                              "weekday": {
+                                "type": "integer",
+                                "title": "星期几",
+                                "description": "1代表上午一二节，2代表上午三四节，3代表下午一二节，4代表下午三四节"
+                              },
+                              "time": {
+                                "type": "integer",
+                                "title": "具体的时间段",
+                                "description": "1代表上午一二节，2代表上午三四节，3代表下午一二节，4代表下午三四节"
+                              },
+                              "teacher_name": {
+                                "type": "string",
+                                "title": "教师姓名"
+                              },
+                              "type": {
+                                "type": "integer",
+                                "title": "课程类型",
+                                "description": "1代表必修课，2代表选修课，3代表通识课"
+                              },
+                              "class_id": {
+                                "type": "integer",
+                                "title": "课程编号"
+                              },
+                              "number": {
+                                "type": "integer",
+                                "title": "已经选上的人数"
+                              },
+                              "total": {
+                                "type": "integer",
+                                "title": "总共可以选的人数"
+                              }
+                            },
+                            "required": [
+                              "class_name",
+                              "weekday",
+                              "teacher_name",
+                              "type",
+                              "class_id",
+                              "number",
+                              "total",
+                              "time"
+                            ],
+                            "x-apifox-orders": [
+                              "class_name",
+                              "weekday",
+                              "time",
+                              "teacher_name",
+                              "type",
+                              "class_id",
+                              "number",
+                              "total"
+                            ],
+                            "x-apifox-ignore-properties": []
+                          }
+                        }
+                      },
+                      "required": [
+                        "class_list"
+                      ],
+                      "x-apifox-orders": [
+                        "class_list"
+                      ],
+                      "x-apifox-ignore-properties": []
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "code",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "code": 200,
+                      "msg": "ok",
+                      "data": {
+                        "class_list": [
+                          {
+                            "class_name": "c++",
+                            "time": 1,
+                            "weekday": 4,
+                            "teacher_name": "小明",
+                            "type": 1,
+                            "class_id": 1,
+                            "number": 4,
+                            "total": 8
+                          },
+                          {
+                            "class_name": "java",
+                            "time": 2,
+                            "weekday": 3,
+                            "teacher_name": "小白",
+                            "type": 1,
+                            "class_id": 2,
+                            "number": 4,
+                            "total": 8
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/3050459/apis/api-97473960-run"
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  },
+  "servers": [
+    {
+      "url": "http://prod-cn.your-api-server.com",
+      "description": "正式环境"
+    }
+  ]
+}
